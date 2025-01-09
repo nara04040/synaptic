@@ -1,4 +1,7 @@
+'use client'
+
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/slices/authStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,20 +13,34 @@ interface AuthFormProps {
 }
 
 export const AuthForm = ({ mode }: AuthFormProps) => {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   
-  const { login, register, error, isLoading, clearError } = useAuthStore()
+  const { login, register, error, isLoading, clearError, isAuthenticated } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     clearError()
+    console.log('Form submitted:', { email, password }) // 디버깅용 로그
 
-    if (mode === 'login') {
-      await login(email, password)
-    } else {
-      await register(email, password, name)
+    try {
+      if (mode === 'login') {
+        await login(email, password)
+        console.log('Login attempted') // 디버깅용 로그
+      } else {
+        await register(email, password, name)
+        console.log('Register attempted') // 디버깅용 로그
+      }
+
+      // 인증 상태 확인
+      if (useAuthStore.getState().isAuthenticated) {
+        console.log('Authentication successful') // 디버깅용 로그
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      console.error('Authentication error:', error)
     }
   }
 

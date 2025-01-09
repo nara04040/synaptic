@@ -7,6 +7,15 @@ export interface User {
   name: string
 }
 
+// 임시 admin 계정
+const ADMIN_USER: User = {
+  id: 'admin',
+  email: 'test@gmail.com',
+  name: 'Admin'
+}
+
+const ADMIN_PASSWORD = 'test1234'
+
 interface AuthState {
   user: User | null
   token: string | null
@@ -31,37 +40,39 @@ export const useAuthStore = create<AuthState>()(
       login: async (email, password) => {
         set({ isLoading: true, error: null })
         try {
-          // TODO: Replace with actual API call
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            body: JSON.stringify({ email, password }),
-          })
-          const data = await response.json()
+          // 임시 admin 계정 체크
+          if (email === ADMIN_USER.email && password === ADMIN_PASSWORD) {
+            set({
+              user: ADMIN_USER,
+              token: 'admin_mock_token',
+              isAuthenticated: true,
+              isLoading: false,
+            })
+            return
+          }
           
-          set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false,
-          })
+          throw new Error('Invalid credentials')
         } catch (error) {
-          set({ error: 'Login failed', isLoading: false })
+          set({ 
+            error: error instanceof Error ? error.message : 'Login failed', 
+            isLoading: false 
+          })
         }
       },
 
       register: async (email, password, name) => {
         set({ isLoading: true, error: null })
         try {
-          // TODO: Replace with actual API call
-          const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            body: JSON.stringify({ email, password, name }),
-          })
-          const data = await response.json()
+          // 임시 사용자 생성
+          const newUser: User = {
+            id: Date.now().toString(),
+            email,
+            name,
+          }
           
           set({
-            user: data.user,
-            token: data.token,
+            user: newUser,
+            token: `mock_token_${newUser.id}`,
             isAuthenticated: true,
             isLoading: false,
           })
@@ -84,7 +95,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ token: state.token }),
+      partialize: (state) => ({ token: state.token, user: state.user }),
     }
   )
 ) 

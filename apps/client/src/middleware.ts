@@ -7,6 +7,11 @@ const protectedRoutes = ['/dashboard', '/roadmap', '/notes', '/review']
 const authRoutes = ['/login', '/register']
 
 export function middleware(request: NextRequest) {
+  // 임시로 모든 라우트 접근 허용
+  return NextResponse.next()
+
+  // 원래 인증 로직 (주석 처리)
+  /*
   const { pathname } = request.nextUrl
   const token = request.cookies.get('auth-storage')?.value
 
@@ -26,6 +31,7 @@ export function middleware(request: NextRequest) {
   }
 
   return NextResponse.next()
+  */
 }
 
 export const config = {
