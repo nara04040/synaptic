@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/', label: 'Home' },
-  { href: '/roadmaps', label: 'My Roadmaps' },
-  { href: '/notes', label: 'Study Notes' },
+  { href: '/roadmap', label: 'Roadmaps' },
+  { href: '/notes', label: 'Notes' },
   { href: '/review', label: 'Review Center' },
   { href: '/blog', label: 'Blog' },
 ]
@@ -34,3 +34,7 @@ export function MainNav() {
     </nav>
   )
 }
+
+
+
+

@@ -1,0 +1,1 @@
+https://v0.dev/chat/QAKLFv9oKf1 레이아웃에 해당하는 컴포넌트들 정리ㄴ
