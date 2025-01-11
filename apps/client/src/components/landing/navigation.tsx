@@ -19,7 +19,7 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
                 <span className="font-inter font-bold text-2xl text-purple-700 dark:text-purple-400">Synaptic</span>
               </Link>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 {["Dashboard", "Roadmap", "Notes", "Review"].map((item) => (
                   <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
@@ -29,8 +29,8 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
               </div>
             </div>
           </div>
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
+          <div className="hidden lg:block">
+            <div className="ml-4 flex items-center lg:ml-6">
               <div className="relative">
                 <Input type="text" placeholder="Search..." className="w-64 pl-10" />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -57,7 +57,7 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
               <ThemeToggle />
             </div>
           </div>
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 flex lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               type="button"
@@ -81,7 +81,7 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden" id="mobile-menu">
+        <div className="lg:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {["Dashboard", "Roadmap", "Notes", "Review"].map((item) => (
               <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">

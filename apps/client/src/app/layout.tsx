@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Navigation } from "@/components/landing/navigation";
+import { MainLayout } from "@/components/layouts/MainLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +18,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const isAuthenticated = true;
+  
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -31,8 +32,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navigation isAuthenticated={isAuthenticated}/>
-          {children}
+          <MainLayout>
+            {children}
+          </MainLayout>
         </ThemeProvider>
       </body>
     </html>
