@@ -4,6 +4,7 @@ import { Button } from "@/components/landing/button";
 import { Input } from "@/components/ui/input";
 import { Bell, Search, User } from "lucide-react";
 import { ThemeToggle } from "@/components/landing/theme-toggle";
+import Link from "next/link";
 
 export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,9 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span className="font-inter font-bold text-2xl text-purple-700 dark:text-purple-400">Synaptic</span>
+              <Link href="/">
+                <span className="font-inter font-bold text-2xl text-purple-700 dark:text-purple-400">Synaptic</span>
+              </Link>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -80,8 +83,8 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
       {isMenuOpen && (
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {["Dashboard", "Roadmaps", "Notes", "Review"].map((item) => (
-              <a key={item} href="#" className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
+            {["Dashboard", "Roadmap", "Notes", "Review"].map((item) => (
+              <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
                 {item}
               </a>
             ))}
