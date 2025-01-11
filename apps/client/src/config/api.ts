@@ -6,4 +6,9 @@ export const API_ENDPOINTS = {
   ROADMAPS: `${API_BASE_URL}/roadmaps`,
   LEARNING: `${API_BASE_URL}/learning`,
   REVIEW: `${API_BASE_URL}/review`,
+  PROFILE: {
+    BASE: `${API_BASE_URL}/profile`,
+    SETTINGS: `${API_BASE_URL}/profile/settings`,
+    AVATAR: `${API_BASE_URL}/profile/avatar`,
+  },
 } as const 
