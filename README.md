@@ -1,84 +1,179 @@
-# Turborepo starter
+# 나만의 로드맵 - Synaptic
 
-This is an official starter Turborepo.
+## 1. 서비스 개요
 
-## Using this example
+### 비전
+- "나만의 학습 지도를 그리다" - 자기주도적 학습 경험 제공
+- 단순 암기가 아닌 개념 간 연결을 통한 깊이 있는 이해를 추구합니다.
+- 하나의 개념을 물어본다면 마치 신경계처럼 전파가 흐르는 것을 깨달아서 개발하게되었습니다.
+- 체계적인 복습 시스템을 통한 장기 기억력 강화
+- **지식 공유** - 학습 노트를 블로그 형식으로 게시하여 지식 공유
 
-Run the following command:
+### 핵심 가치
+1. **자기주도성** - 사용자가 직접 만들어가는 학습 로드맵
+2. **구조화된 학습** - 템플릿 기반의 체계적인 학습 가이드
+3. **연결성** - 개념 간 유기적 연결을 통한 통합적 이해
+4. **지속가능성** - 과학적인 복습 시스템을 통한 장기 기억 형성
+5. **공유성** - 블로그를 통한 지식 공유와 피드백
 
-```sh
-npx create-turbo@latest
-```
+## 2. 핵심 기능
 
-## What's inside?
+### A. 로드맵 생성 시스템
 
-This Turborepo includes the following packages/apps:
+1. **초기 로드맵 설정**
+   - 학습 분야 선택 (예: 네트워크, 알고리즘, 프론트엔드 등)
+   - 추천 로드맵 템플릿 제공 (예: 프론트엔드 로드맵, 백엔드 로드맵 ... )
+   - 사용자 맞춤 로드맵 생성 도구
 
-### Apps and Packages
+2. **로드맵 커스터마이징**
+   - 드래그 앤 드롭 방식의 개념 배치
+   - 개념 간 관계 설정
+   - 학습 우선순위 지정
+   - 진행 상황 시각화
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### B. 학습 템플릿(노트) 시스템
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+1. **구조화된 학습 템플릿**
+   - 개념 정의 (자신만의 언어로)
+   - 핵심 포인트 정리
+   - 주요 용어 정리
+   - 3줄 요약
+   - 연결 개념 작성
 
-### Utilities
+2. **템플릿 특징**
+   - 단계별 작성 가이드
+   - 실시간 작성 팁 제공
+   - 예시 답안 참고 기능
+   - 자동 저장 기능
 
-This Turborepo has some additional tools already setup for you:
+### C. 스마트 복습 시스템
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+1. **복습 일정 관리**
+   - 에빙하우스 망각 곡선 기반 타이밍
+   - 1일/3일/7일/14일/30일 주기 복습
+   - 개인별 학습 패턴 분석 및 최적 시간 추천
 
-### Build
+2. **복습 방식**
+   - 작성한 내용 기반 퀴즈 생성
+   - 개념 연결 게임
+   - 빈칸 채우기
+   - 마인드맵 그리기
+   - 심화 질문에 답변하기 (압박질문)
 
-To build all apps and packages, run the following command:
+### D. 블로그 시스템
 
-```
-cd my-turborepo
-pnpm build
-```
+1. **블로그 작성 및 관리**
+   - 마크다운 및 WYSIWYG 지원
+   - 코드 하이라이팅
+   - 이미지 및 미디어 첨부
+   - 실시간 미리보기
+   - 게시물 관리 (게시/비공개 설정, 수정 및 삭제)
 
-### Develop
+2. **블로그와 로드맵 연동**
+   - 로드맵 노드와 블로그 연결
+   - 블로그 내 로드맵 시각화
 
-To develop all apps and packages, run the following command:
+3. **블로그 공유 및 SEO**
+   - 소셜 미디어 및 커뮤니티 공유
+   - SEO 최적화 (메타 태그, URL 구조)
 
-```
-cd my-turborepo
-pnpm dev
-```
+## 3. 사용자 경험 (UX) 설계
 
-### Remote Caching
+### A. 초기 진입 경험
+1. **온보딩 프로세스**
+   - 서비스 핵심 가치 소개
+   - 학습 목표 설정
+   - 선호하는 학습 스타일 파악
+   - 초기 로드맵 생성 가이드
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+2. **첫 학습 가이드**
+   - 로드맵 생성 튜토리얼
+   - 학습 템플릿 작성 예시
+   - 복습 시스템 안내
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+### B. 메인 학습 경험
+1. **로드맵 네비게이션**
+   - 현재 학습 위치 표시
+   - 다음 학습 추천
+   - 진행률 시각화
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+2. **학습 프로세스**
+   - 템플릿 기반 단계별 학습
+   - 실시간 작성 가이드
+   - 자동 저장 및 복구
 
-```
-cd my-turborepo
-npx turbo login
-```
+### C. 복습 경험
+1. **알림 시스템**
+   - 최적 복습 시점 알림
+   - 진행률 기반 동기부여 메시지
+   - 학습 패턴 분석 리포트
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+2. **인터랙티브 복습**
+   - 다양한 복습 방식 제공
+   - 난이도 자동 조절
+   - 성취감 부여 시스템
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 4. 기술 구현 계획
 
-```
-npx turbo link
-```
+### A. 프론트엔드
+- React 기반 웹/앱 서비스
+- 직관적인 드래그 앤 드롭 인터페이스
+- 오프라인 지원
+- 실시간 동기화
 
-## Useful Links
+### B. 백엔드
+- Node.js 기반 서버
+- Supabase를 통한 유연한 데이터 구조 관리
 
-Learn more about the power of Turborepo:
+### C. 데이터 분석
+- 학습 패턴 분석
+- 최적 복습 시점 계산
+- 개인화된 학습 경로 추천
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+## 5. 개발 로드맵
+
+### Phase 1: MVP (1개월)
+- 기본 로드맵 생성 기능
+- 핵심 학습 템플릿
+- 기본 복습 시스템
+
+### Phase 2: 고도화 (2개월)
+- 고급 로드맵 커스터마이징
+- 다양한 학습 템플릿
+- 스마트 복습 시스템
+- 학습 분석 기능
+
+### Phase 3: 확장 (3개월)
+- AI 기반 학습 추천
+- 소셜 학습 기능
+- 고급 데이터 분석
+- API 확장
+
+## 6. 기대 효과
+
+### A. 사용자 측면
+- 체계적인 학습 경험
+- 장기 기억력 향상
+- 학습 동기 유지
+- 자기주도적 학습 능력 향상
+- **지식 공유를 통한 학습 강화**
+
+### B. 서비스 측면
+- 차별화된 학습 플랫폼
+- 데이터 기반 지속적 개선
+- 확장 가능한 비즈니스 모델
+- **사용자 생성 콘텐츠로 인한 커뮤니티 활성화**
+
+## 7. 향후 발전 방향
+
+### A. 기능 확장
+- AI 기반 학습 컨텐츠 생성
+- 실시간 협업 학습
+- VR/AR 학습 경험
+
+### B. 플랫폼 확장
+- 교육기관 연계
+- 기업 교육 플랫폼
+- 글로벌 시장 진출
+
+이 기획서는 사용자의 자기주도적 학습을 지원하고, 효과적인 장기 기억 형성을 돕는 체계적인 학습 플랫폼의 구축을 목표로 합니다. 
