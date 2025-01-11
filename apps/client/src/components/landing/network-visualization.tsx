@@ -26,11 +26,14 @@ const data = {
   ]
 }
 
-export function NetworkVisualization() {
+export default function NetworkVisualization() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    setIsMounted(true)
+    
     const handleResize = () => {
       if (containerRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect()
@@ -44,6 +47,8 @@ export function NetworkVisualization() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  if (!isMounted) return null
+
   return (
     <div ref={containerRef} className="w-full h-full">
       <ForceGraph2D
@@ -56,10 +61,16 @@ export function NetworkVisualization() {
           const fontSize = 12/globalScale
           ctx.font = `${fontSize}px Sans-Serif`
           const textWidth = ctx.measureText(label).width
-          const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2)
+          const bckgDimensions = [textWidth, fontSize]
+          const [width, height] = bckgDimensions.map(n => n + fontSize * 0.2)
 
           ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
-          ctx.fillRect(node.x! - bckgDimensions[0] / 2, node.y! - bckgDimensions[1] / 2, ...bckgDimensions)
+          ctx.fillRect(
+            node.x! - width / 2,
+            node.y! - height / 2,
+            width,
+            height
+          )
 
           ctx.textAlign = 'center'
           ctx.textBaseline = 'middle'

@@ -7,48 +7,94 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { EmailVerificationStep } from './EmailVerificationStep'
+import { sendVerificationEmail, resendVerificationEmail } from '@/services/auth'
 
 interface AuthFormProps {
   mode: 'login' | 'register'
 }
+
+type RegisterStep = 'FORM' | 'EMAIL_VERIFICATION' | 'COMPLETION'
 
 export const AuthForm = ({ mode }: AuthFormProps) => {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  const [registerStep, setRegisterStep] = useState<RegisterStep>('FORM')
+  const [formError, setFormError] = useState<string | null>(null)
   
   const { login, register, error, isLoading, clearError, isAuthenticated } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     clearError()
-    console.log('Form submitted:', { email, password }) // 디버깅용 로그
+    setFormError(null)
 
     try {
       if (mode === 'login') {
         await login(email, password)
-        console.log('Login attempted') // 디버깅용 로그
       } else {
-        await register(email, password, name)
-        console.log('Register attempted') // 디버깅용 로그
+        // 회원가입 시 이메일 인증 코드 발송
+        const response = await sendVerificationEmail(email)
+        if (response.success) {
+          setRegisterStep('EMAIL_VERIFICATION')
+        } else {
+          setFormError(response.message)
+        }
       }
 
-      // 인증 상태 확인
       if (useAuthStore.getState().isAuthenticated) {
-        console.log('Authentication successful') // 디버깅용 로그
         router.push('/dashboard')
       }
     } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'An error occurred')
       console.error('Authentication error:', error)
     }
   }
 
+  const handleVerificationComplete = async () => {
+    try {
+      // 이메일 인증이 완료된 후 실제 회원가입 진행
+      await register(email, password, name)
+      setRegisterStep('COMPLETION')
+      
+      if (useAuthStore.getState().isAuthenticated) {
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Registration failed')
+      console.error('Registration error:', error)
+    }
+  }
+
+  const handleResendEmail = async () => {
+    try {
+      const response = await resendVerificationEmail(email)
+      if (!response.success) {
+        setFormError(response.message)
+      }
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Failed to resend verification email')
+      console.error('Error resending email:', error)
+    }
+  }
+
+  if (mode === 'register' && registerStep === 'EMAIL_VERIFICATION') {
+    return (
+      <EmailVerificationStep
+        email={email}
+        onVerificationComplete={handleVerificationComplete}
+        onResendEmail={handleResendEmail}
+      />
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-sm">
-      {error && (
+      {(error || formError) && (
         <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error || formError}</AlertDescription>
         </Alert>
       )}
 

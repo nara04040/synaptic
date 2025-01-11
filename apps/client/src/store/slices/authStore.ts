@@ -1,101 +1,144 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { AuthState, AuthUser, JWTToken } from '@/types/auth'
+import { saveTokens, removeTokens, getTokens, isTokenValid, setAutoLogin, getAutoLogin, getDeviceInfo } from '@/utils/auth'
+import { API_ENDPOINTS } from '@/config/api'
 
-export interface User {
-  id: string
-  email: string
-  name: string
+const initialState: AuthState = {
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
+  tokens: null,
+  autoLogin: getAutoLogin(),
 }
 
-// 임시 admin 계정
-const ADMIN_USER: User = {
-  id: 'admin',
-  email: 'test@gmail.com',
-  name: 'Admin'
-}
+export const useAuthStore = create<AuthState & {
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
+  logout: () => void;
+  refreshToken: () => Promise<void>;
+  setUser: (user: AuthUser) => void;
+  clearError: () => void;
+  setAutoLogin: (enabled: boolean) => void;
+}>((set, get) => ({
+  ...initialState,
 
-const ADMIN_PASSWORD = 'test1234'
+  login: async (email: string, password: string) => {
+    set({ isLoading: true, error: null })
+    
+    try {
+      const response = await fetch(`${API_ENDPOINTS.AUTH}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email, 
+          password,
+          deviceInfo: getDeviceInfo()
+        }),
+      })
 
-interface AuthState {
-  user: User | null
-  token: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  error: string | null
-  login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, name: string) => Promise<void>
-  logout: () => void
-  clearError: () => void
-}
+      if (!response.ok) {
+        throw new Error('Login failed')
+      }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-
-      login: async (email, password) => {
-        set({ isLoading: true, error: null })
-        try {
-          // 임시 admin 계정 체크
-          if (email === ADMIN_USER.email && password === ADMIN_PASSWORD) {
-            set({
-              user: ADMIN_USER,
-              token: 'admin_mock_token',
-              isAuthenticated: true,
-              isLoading: false,
-            })
-            return
-          }
-          
-          throw new Error('Invalid credentials')
-        } catch (error) {
-          set({ 
-            error: error instanceof Error ? error.message : 'Login failed', 
-            isLoading: false 
-          })
-        }
-      },
-
-      register: async (email, password, name) => {
-        set({ isLoading: true, error: null })
-        try {
-          // 임시 사용자 생성
-          const newUser: User = {
-            id: Date.now().toString(),
-            email,
-            name,
-          }
-          
-          set({
-            user: newUser,
-            token: `mock_token_${newUser.id}`,
-            isAuthenticated: true,
-            isLoading: false,
-          })
-        } catch (error) {
-          set({ error: 'Registration failed', isLoading: false })
-        }
-      },
-
-      logout: () => {
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-        })
-      },
-
-      clearError: () => {
-        set({ error: null })
-      },
-    }),
-    {
-      name: 'auth-storage',
-      partialize: (state) => ({ token: state.token, user: state.user }),
+      const data = await response.json()
+      saveTokens(data.tokens)
+      set({ 
+        user: data.user,
+        tokens: data.tokens,
+        isAuthenticated: true,
+        isLoading: false 
+      })
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'Login failed',
+        isLoading: false 
+      })
+      throw error
     }
-  )
-) 
+  },
+
+  register: async (email: string, password: string, name: string) => {
+    set({ isLoading: true, error: null })
+    
+    try {
+      const response = await fetch(`${API_ENDPOINTS.AUTH}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          name,
+          deviceInfo: getDeviceInfo()
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Registration failed')
+      }
+
+      const data = await response.json()
+      saveTokens(data.tokens)
+      set({ 
+        user: data.user,
+        tokens: data.tokens,
+        isAuthenticated: true,
+        isLoading: false 
+      })
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'Registration failed',
+        isLoading: false 
+      })
+      throw error
+    }
+  },
+
+  logout: () => {
+    removeTokens()
+    set({ 
+      ...initialState,
+      autoLogin: get().autoLogin 
+    })
+  },
+
+  refreshToken: async () => {
+    const currentTokens = get().tokens
+    if (!currentTokens?.refreshToken) return
+
+    try {
+      const response = await fetch(`${API_ENDPOINTS.AUTH}/refresh-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          refreshToken: currentTokens.refreshToken,
+          deviceInfo: getDeviceInfo()
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Token refresh failed')
+      }
+
+      const data = await response.json()
+      saveTokens(data.tokens)
+      set({ tokens: data.tokens })
+    } catch (error) {
+      get().logout()
+      throw error
+    }
+  },
+
+  setUser: (user: AuthUser) => {
+    set({ user })
+  },
+
+  clearError: () => {
+    set({ error: null })
+  },
+
+  setAutoLogin: (enabled: boolean) => {
+    setAutoLogin(enabled)
+    set({ autoLogin: enabled })
+  },
+})) 

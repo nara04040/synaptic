@@ -1,6 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/landing/badge'
-import { NetworkVisualization } from '@/components/landing/network-visualization'
+"use client";
+
+import dynamic from 'next/dynamic'
+import {Button} from '@/components/ui/button';
+import { Badge } from './badge';
+
+
+
+// NetworkVisualization을 동적으로 import
+const NetworkVisualization = dynamic(
+  () => import('./network-visualization'),
+  { ssr: false }
+)
 
 export function Hero() {
   return (
