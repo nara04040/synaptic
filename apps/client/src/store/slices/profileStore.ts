@@ -1,156 +1,97 @@
 import { create } from 'zustand'
-import { Profile, ProfileSettings, ProfileState } from '@/types/profile'
-import { API_ENDPOINTS } from '@/config/api'
+import { Profile, ProfileSettings, ProfileState, CareerLevel, Theme } from '@/types/profile'
 
-const initialState: ProfileState = {
+// 임시 더미 데이터
+const DUMMY_PROFILE: Profile = {
+  id: '1',
+  userId: '1',
+  name: 'John Doe',
+  email: 'john@example.com',
+  profileImage: undefined,
+  jobTitle: 'Software Engineer',
+  careerLevel: CareerLevel.INTERMEDIATE,
+  techStack: ['react', 'typescript', 'nextjs'],
+  bio: 'Passionate about web development and new technologies.',
+  githubUrl: 'https://github.com',
+  linkedinUrl: 'https://linkedin.com',
+  personalWebsite: 'https://blog.com',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+}
+
+const DUMMY_SETTINGS: ProfileSettings = {
+  theme: Theme.SYSTEM,
+  emailNotifications: {
+    dailyDigest: true,
+    weeklyProgress: true,
+    learningReminders: true,
+    roadmapUpdates: true,
+  },
+  learningGoals: {
+    dailyStudyTime: 120,
+    weeklyCompletionTarget: 5,
+    focusAreas: ['frontend', 'backend'],
+  },
+}
+
+export const useProfileStore = create<ProfileState>((set) => ({
   profile: null,
   settings: null,
   isLoading: false,
   error: null,
-}
-
-export const useProfileStore = create<ProfileState & {
-  fetchProfile: () => Promise<void>;
-  updateProfile: (profile: Partial<Profile>) => Promise<void>;
-  fetchSettings: () => Promise<void>;
-  updateSettings: (settings: Partial<ProfileSettings>) => Promise<void>;
-  uploadAvatar: (file: File) => Promise<void>;
-  clearError: () => void;
-}>((set, get) => ({
-  ...initialState,
-
+  
   fetchProfile: async () => {
     set({ isLoading: true, error: null })
     try {
-      const response = await fetch(API_ENDPOINTS.PROFILE.BASE, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch profile')
-      }
-
-      const data = await response.json()
-      set({ profile: data, isLoading: false })
+      // API 구현 전까지 더미 데이터 사용
+      await new Promise(resolve => setTimeout(resolve, 1000)) // 실제 API 호출처럼 보이게 하기 위한 지연
+      set({ profile: DUMMY_PROFILE })
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to fetch profile',
-        isLoading: false 
-      })
+      set({ error: '프로필을 불러오는데 실패했습니다.' })
+    } finally {
+      set({ isLoading: false })
     }
   },
 
   updateProfile: async (profileData: Partial<Profile>) => {
     set({ isLoading: true, error: null })
     try {
-      const response = await fetch(API_ENDPOINTS.PROFILE.BASE, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(profileData),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update profile')
-      }
-
-      const data = await response.json()
-      set({ profile: data, isLoading: false })
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      set(state => ({
+        profile: state.profile ? { ...state.profile, ...profileData } : null
+      }))
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to update profile',
-        isLoading: false 
-      })
+      set({ error: '프로필 업데이트에 실패했습니다.' })
+    } finally {
+      set({ isLoading: false })
     }
   },
 
   fetchSettings: async () => {
     set({ isLoading: true, error: null })
     try {
-      const response = await fetch(API_ENDPOINTS.PROFILE.SETTINGS, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch settings')
-      }
-
-      const data = await response.json()
-      set({ settings: data, isLoading: false })
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      set({ settings: DUMMY_SETTINGS })
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to fetch settings',
-        isLoading: false 
-      })
+      set({ error: '설정을 불러오는데 실패했습니다.' })
+    } finally {
+      set({ isLoading: false })
     }
   },
 
   updateSettings: async (settingsData: Partial<ProfileSettings>) => {
     set({ isLoading: true, error: null })
     try {
-      const response = await fetch(API_ENDPOINTS.PROFILE.SETTINGS, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(settingsData),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update settings')
-      }
-
-      const data = await response.json()
-      set({ settings: data, isLoading: false })
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      set(state => ({
+        settings: state.settings ? { ...state.settings, ...settingsData } : null
+      }))
     } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to update settings',
-        isLoading: false 
-      })
+      set({ error: '설정 업데이트에 실패했습니다.' })
+    } finally {
+      set({ isLoading: false })
     }
   },
 
-  uploadAvatar: async (file: File) => {
-    set({ isLoading: true, error: null })
-    try {
-      const formData = new FormData()
-      formData.append('avatar', file)
-
-      const response = await fetch(API_ENDPOINTS.PROFILE.AVATAR, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to upload avatar')
-      }
-
-      const data = await response.json()
-      set({ 
-        profile: { ...get().profile!, profileImage: data.imageUrl },
-        isLoading: false 
-      })
-    } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Failed to upload avatar',
-        isLoading: false 
-      })
-    }
-  },
-
-  clearError: () => {
-    set({ error: null })
-  },
+  clearError: () => set({ error: null }),
 })) 

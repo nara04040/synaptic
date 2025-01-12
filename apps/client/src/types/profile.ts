@@ -35,21 +35,59 @@ export interface EmailNotificationSettings {
   roadmapUpdates: boolean;
 }
 
-export interface LearningGoals {
-  dailyStudyTime?: number; // minutes
-  weeklyCompletionTarget?: number;
+export interface LearningGoalSettings {
+  dailyStudyTime: number; // in minutes
+  weeklyCompletionTarget: number;
   focusAreas: string[];
+  preferredLearningTime?: 'morning' | 'afternoon' | 'evening' | 'night';
+  learningStyle?: 'visual' | 'auditory' | 'reading' | 'kinesthetic';
+  difficultyPreference?: 'beginner' | 'intermediate' | 'advanced';
+  topicsOfInterest?: string[];
+  certificateGoals?: string[];
 }
 
-export interface ProfileSettings {
+export interface DisplaySettings {
+  language: string;
+  timezone: string;
+  dateFormat: string;
   theme: Theme;
+}
+
+export interface PrivacySettings {
+  profileVisibility: 'public' | 'private' | 'connections';
+  showEmail: boolean;
+  showProgress: boolean;
+  showAchievements: boolean;
+}
+
+export interface AccessibilitySettings {
+  fontSize: 'small' | 'medium' | 'large';
+  contrast: 'normal' | 'high';
+  reduceAnimations: boolean;
+  screenReaderOptimized: boolean;
+}
+
+export interface Settings {
+  display: DisplaySettings;
+  privacy: PrivacySettings;
+  accessibility: AccessibilitySettings;
   emailNotifications: EmailNotificationSettings;
-  learningGoals: LearningGoals;
+  learningGoals: LearningGoalSettings;
 }
 
 export interface ProfileState {
   profile: Profile | null;
-  settings: ProfileSettings | null;
+  settings: Settings | null;
   isLoading: boolean;
   error: string | null;
-} 
+  fetchProfile: () => Promise<void>;
+  updateProfile: (profileData: Partial<Profile>) => Promise<void>;
+  fetchSettings: () => Promise<void>;
+  updateSettings: (settingsData: Partial<Settings>) => Promise<void>;
+  clearError: () => void;
+}
+
+export type SettingsUpdateAction = {
+  type: 'display' | 'privacy' | 'accessibility' | 'emailNotifications' | 'learningGoals';
+  payload: Partial<Settings[keyof Settings]>;
+}; 

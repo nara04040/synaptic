@@ -8,6 +8,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ProfileForm } from '@/components/profile/ProfileForm'
 import { TechStackSelect } from '@/components/profile/TechStackSelect'
+import { NotificationSettings } from '@/components/profile/NotificationSettings'
+import { ThemeSettings } from '@/components/profile/ThemeSettings'
+import { LearningGoalSettings } from '@/components/profile/LearningGoalSettings'
 
 export default function ProfilePage() {
   const { profile, settings, isLoading, error, fetchProfile, fetchSettings } = useProfileStore()
@@ -110,10 +113,7 @@ export default function ProfilePage() {
                     <Skeleton className="h-4 w-[150px]" />
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {/* NotificationSettings 컴포넌트는 다음 단계에서 구현 */}
-                    <p>Notification settings will be implemented here</p>
-                  </div>
+                  <NotificationSettings />
                 )}
               </CardContent>
             </Card>
@@ -129,10 +129,7 @@ export default function ProfilePage() {
                     <Skeleton className="h-4 w-[150px]" />
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {/* ThemeSettings 컴포넌트는 다음 단계에서 구현 */}
-                    <p>Theme settings will be implemented here</p>
-                  </div>
+                  <ThemeSettings />
                 )}
               </CardContent>
             </Card>
@@ -145,14 +142,11 @@ export default function ProfilePage() {
               <CardContent>
                 {isLoading ? (
                   <div className="space-y-4">
-                    <Skeleton className="h-4 w-[250px]" />
                     <Skeleton className="h-4 w-[200px]" />
+                    <Skeleton className="h-4 w-[150px]" />
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {/* LearningGoalSettings 컴포넌트는 다음 단계에서 구현 */}
-                    <p>Learning goals will be implemented here</p>
-                  </div>
+                  <LearningGoalSettings />
                 )}
               </CardContent>
             </Card>

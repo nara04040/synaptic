@@ -41,7 +41,9 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
                     <Bell className="h-5 w-5" />
                   </Button>
                   <Button variant="ghost" size="icon" className="ml-2">
-                    <User className="h-5 w-5" />
+                    <Link href='/profile'>
+                      <User className="h-5 w-5" />
+                    </Link>
                   </Button>
                 </>
               ) : (
