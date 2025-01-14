@@ -1,0 +1,11 @@
+## 개발을 마쳤을 때
+개발을 마치고 난 뒤 todolist 형식으로 정리해서 말하세요
+
+## 패키지 매니저
+현재 사용하고있는 패키지 매니저 입니다.
+
+client: yarn
+server: yarn
+
+## 클라이언트 폴더 위치
+/Users/yuhannala/Documents/Github/synaptic-project/synaptic/apps/client
