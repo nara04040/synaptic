@@ -165,6 +165,22 @@ export function RoadmapEditor() {
     setSelectedNodes(params.nodes)
   }, [])
 
+  const debouncedPushToHistory = useMemo(() => {
+    let timeoutId: NodeJS.Timeout | null = null
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => {
+        pushToHistory(nodes, edges)
+      }, 300)
+    }
+  }, [pushToHistory])
+
+  useEffect(() => {
+    if (nodes.length > 0 || edges.length > 0) {
+      debouncedPushToHistory()
+    }
+  }, [nodes, edges, debouncedPushToHistory])
+
   const handleCreateGroup = useCallback(() => {
     if (selectedNodes.length === 0) return
 
@@ -187,20 +203,21 @@ export function RoadmapEditor() {
       },
     }
 
-    setNodes((nds) => 
-      nds.map((node) => 
+    setNodes(prevNodes => {
+      const updatedNodes = prevNodes.map(node => 
         selectedNodes.find(n => n.id === node.id)
           ? { ...node, data: { ...node.data, group: groupId } }
           : node
-      ).concat(groupNode)
-    )
-  }, [selectedNodes, setNodes])
+      )
+      return [...updatedNodes, groupNode]
+    })
+  }, [selectedNodes])
 
   const handleUngroup = useCallback(() => {
     if (!selectedNode || selectedNode.type !== 'group') return
 
-    setNodes((nds) => 
-      nds
+    setNodes(prevNodes => 
+      prevNodes
         .filter(node => node.id !== selectedNode.id)
         .map(node => 
           node.data.group === selectedNode.id
@@ -209,7 +226,7 @@ export function RoadmapEditor() {
         )
     )
     setSelectedNode(null)
-  }, [selectedNode, setNodes])
+  }, [selectedNode])
 
   const handleAutoLayout = useCallback(async () => {
     if (nodes.length === 0) return
@@ -219,40 +236,25 @@ export function RoadmapEditor() {
       animate: true
     })
     
-    setNodes(prevNodes => {
-      const updatedNodes = layoutedNodes.map(layoutedNode => {
+    setNodes(prevNodes => 
+      layoutedNodes.map(layoutedNode => {
         const originalNode = prevNodes.find(n => n.id === layoutedNode.id)
         return {
           ...layoutedNode,
-          data: {
-            ...originalNode?.data,
-            ...(layoutedNode.data || {})
-          },
-          style: {
-            ...originalNode?.style,
-            ...(layoutedNode.style || {})
-          }
+          data: originalNode?.data || layoutedNode.data,
+          style: originalNode?.style || layoutedNode.style
         }
       })
-      return updatedNodes
-    })
+    )
     
     setEdges(layoutedEdges)
-  }, [nodes.length, edges.length])
-
-  const memoizedPushToHistory = useCallback(() => {
-    pushToHistory(nodes, edges)
-  }, [nodes, edges, pushToHistory])
-
-  useEffect(() => {
-    memoizedPushToHistory()
-  }, [memoizedPushToHistory])
+  }, [nodes, edges])
 
   return (
-    <div className="h-[calc(100vh-12rem)] rounded-lg border bg-background">
+    <div className="h-[calc(100vh-12rem)] rounded-lg border bg-background w-full">
       <div className="flex h-full">
         <EditorSidebar />
-        <div className="relative flex-1">
+        <div className="relative flex-1 w-full overflow-hidden">
           <EditorToolbar 
             onSave={handleSave}
             onDeleteNode={handleDeleteNode}
@@ -286,6 +288,7 @@ export function RoadmapEditor() {
             onInit={setRfInstance}
             onSelectionChange={handleSelectionChange}
             multiSelectionKeyCode="Shift"
+            className="w-full h-[calc(100%-50px)]"
           >
             <Background />
             <Controls />
