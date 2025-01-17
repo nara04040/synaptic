@@ -1,139 +1,180 @@
-# 개념 지도 학습 서비스 상세 기획서
+# 시냅스 기반 지식 연결 플랫폼 상세 기획서
 
 ## 1. 서비스 상세 정의
 
 ### 1.1 서비스명: "Synaptic" (시냅틱)
-- 태그라인: "당신만의 학습 여정을 지도로 그리다"
+- 태그라인: "지식을 연결하여 더 깊은 이해를 만들다"
 
 ### 1.2 서비스 목적
-- 개발자들의 체계적인 기술 학습 지원
-- 개념 간 연결을 통한 깊이 있는 이해 도모
-- 과학적인 복습 시스템을 통한 장기 기억 형성
-- 기술 면접 대비를 위한 체계적인 준비 지원
-- 웹/앱을 통한 간편한 배포, 직접적인 사용 가능
+- 개념 간 연결을 통한 직관적 이해 도모
+- 시각적 시냅스 맵을 통한 지식 구조화
+- 연결 기반 학습을 통한 장기 기억 형성
+- 개인화된 지식 네트워크 구축
 
 ### 1.3 타겟 사용자
 1. 주 타겟
-   - 개발자 취업 준비생
-   - 주니어 개발자
-   - 공부한 내용이 자꾸 까먹거나, 제대로 말하지 못하는 사람 
+   - 개발 지식을 체계화하려는 개발자
+   - 개념 간 연결을 중시하는 학습자
+   - 직관적 이해를 추구하는 학습자
 
 2. 부 타겟
-   - 개발 교육 기관
-   - 기술 면접관
-   - 개발팀 리더
+   - 지식 구조화에 관심 있는 교육자
+   - 팀 지식 관리가 필요한 개발팀
+   - 개념 설명이 필요한 기술 작가
 
 ## 2. 핵심 기능 상세
 
-### 2.1 로드맵 시스템
+### 2.1 시냅스 맵 시스템
 
-#### A. 로드맵 템플릿
-1. 직무별 기본 템플릿
-   - 프론트엔드 개발자 로드맵
-   - 백엔드 개발자 로드맵
-   - 풀스택 개발자 로드맵
-   - DevOps 엔지니어 로드맵
-
-2. 기술 스택별 세부 템플릿
-   - JavaScript 완성 로드맵
-   - React 완성 로드맵
-   - Spring 완성 로드맵
-   - 알고리즘 마스터 로드맵
-   - CS 기초 완성 로드맵
-
-#### B. 커스텀 로드맵 기능
-1. 드래그 앤 드롭 에디터
-   - 노드 추가/삭제/수정
-   - 노드 간 연결 설정
-   - 우선순위 설정
-   - 진행 상태 표시
-
-2. 로드맵 공유 기능
-   - 공개/비공개 설정
-   - 템플릿으로 저장
-   - URL 공유
-   - 협업 편집 기능
-
-3. 노드의 상세 내용 기록
-   - 공부하거나 기록 한 내용 추가/삭제/수정
-   - 한 눈에 보일 수 있게 줄임말이나 해쉬태그로 간략화
-
-### 2.2 학습 템플릿 시스템
-
-#### A. 기본 템플릿 구조
-1. 개념 정의 섹션
-   ```
-   - 상위, 하위 개념 이정표(Breadcrumb) :
-   - 한 줄 정의:
-   - 상세 설명:
-   - 포인트 키워드 : 
-   - 실무 활용 예시:
+#### A. 노드 시스템
+1. 노드 타입
+   ```typescript
+   interface Node {
+     id: string;
+     type: 'concept' | 'implementation' | 'example' | 'question';
+     title: string;
+     summary: string;
+     tags: string[];
+     strength: number; // 이해도/숙련도 (0-100)
+     metadata: {
+       created: Date;
+       lastReviewed: Date;
+       complexity: number;
+       prerequisites: string[];
+     };
+   }
    ```
 
-2. 핵심 포인트 섹션
-   ```
-   - 주요 특징:
-   - 장단점:
-   - 대체 기술과의 비교:
-   ```
-
-3. 코드 예시 섹션
-   ```
-   - 기본 사용 예시
-   - 실제 프로젝트 적용 예시
-   - 주의사항
-   ```
-
-4. 면접 대비 섹션
-   ```
-   - 예상 질문:
-   - 모범 답안:
-   - 꼬리 질문 대비:
+2. 연결 시스템
+   ```typescript
+   interface Connection {
+     id: string;
+     sourceId: string;
+     targetId: string;
+     type: 'prerequisite' | 'related' | 'extends' | 'implements';
+     strength: number;  // 연결 강도
+     explanation: string; // 연결 이유
+     bidirectional: boolean;
+     metadata: {
+       created: Date;
+       lastStrengthened: Date;
+       references: string[];
+     };
+   }
    ```
 
-#### B. 템플릿 작성 지원
-1. AI 작성 도우미
-   - 실시간 작성 제안
-   - 관련 자료 추천
-   - 오타 및 문법 교정
-
-2. 자동 저장 시스템
-   - 실시간 자동 저장
-   - 버전 히스토리
-   - 되돌리기 기능
-
-### 2.3 스마트 복습 시스템
-
-#### A. 복습 일정 관리
-1. 기본 복습 주기
-   ```
-   1차: 학습 직후
-   2차: 1일 후
-   3차: 3일 후
-   4차: 7일 후
-   5차: 14일 후
-   6차: 30일 후
+#### B. 시각화 시스템
+1. 뉴런 모드
+   ```typescript
+   interface NeuralView {
+     mode: 'neural';
+     options: {
+       pulseEffect: boolean;
+       strengthVisualization: 'thickness' | 'color' | 'both';
+       animationSpeed: number;
+       focusHighlight: boolean;
+     };
+   }
    ```
 
-2. 개인화된 복습 최적화
-   - 학습 성취도 기반 주기 조정
-   - 개인 스케줄 고려
-   - 학습 패턴 분석
+2. 마인드맵 모드
+   ```typescript
+   interface MindMapView {
+     mode: 'mindmap';
+     options: {
+       layout: 'radial' | 'horizontal' | 'vertical';
+       grouping: boolean;
+       expandLevels: number;
+       minimap: boolean;
+     };
+   }
+   ```
 
-#### B. 복습 콘텐츠 생성
-1. 자동 퀴즈 생성
-   - 객관식 문제
-   - 주관식 문제
-   - 코드 구현 문제
+### 2.2 노트 시스템
 
-2. 인터랙티브 학습 게임
-   - 개념 연결하기
-   - 순서 맞추기
-   - 빈칸 채우기
+#### A. 노트 구조
+```typescript
+interface Note {
+  id: string;
+  type: 'detail' | 'example' | 'interview' | 'code';
+  content: {
+    markdown: string;
+    codeBlocks: CodeBlock[];
+    attachments: Attachment[];
+  };
+  linkedNodes: {
+    nodeId: string;
+    relevance: number;
+    context: string;
+  }[];
+  metadata: {
+    created: Date;
+    lastModified: Date;
+    tags: string[];
+    visibility: 'private' | 'public' | 'shared';
+  };
+}
+```
 
-3. 압박 면접 답하기
-   - 특정 개념에 따른 꼬리질문 답변
+#### B. 노트 템플릿
+1. 개념 정의 템플릿
+   ```typescript
+   interface ConceptTemplate {
+     definition: string;
+     keyPoints: string[];
+     examples: string[];
+     commonMisconceptions: string[];
+     practicalApplications: string[];
+   }
+   ```
 
+2. 구현 예시 템플릿
+   ```typescript
+   interface ImplementationTemplate {
+     problem: string;
+     approach: string;
+     codeExample: string;
+     edgeCases: string[];
+     optimizations: string[];
+   }
+   ```
+
+### 2.3 블로그 시스템
+
+#### A. 블로그 포스트 구조
+```typescript
+interface BlogPost {
+  id: string;
+  type: 'explanation' | 'deep-dive' | 'connection-story';
+  content: {
+    markdown: string;
+    synapseMapSnapshot: {
+      nodes: string[];
+      connections: string[];
+      focusNode: string;
+    };
+  };
+  metadata: {
+    seo: SEOData;
+    publishStatus: 'draft' | 'published';
+    visibility: 'public' | 'private' | 'shared';
+  };
+}
+```
+
+#### B. 시냅스 맵 통합
+```typescript
+interface MapIntegration {
+  embedType: 'static' | 'interactive';
+  highlightPath: string[];
+  focusNodes: string[];
+  interactiveOptions: {
+    allowExploration: boolean;
+    showDetails: boolean;
+    allowEditing: boolean;
+  };
+}
+```
 
 ## 3. 기술 아키텍처
 
@@ -141,157 +182,101 @@
 ```typescript
 // 기술 스택
 - React + TypeScript
-- Next.js
-- TailwindCSS
-- ChadCN
-- React Query
-- zustand
-- React Flow (로드맵 시각화)
+- D3.js/Three.js (시냅스 맵 시각화)
+- TailwindCSS + shadcn/ui (UI 컴포넌트)
+- Zustand (상태 관리)
+- TanStack Query (데이터 페칭)
 - Monaco Editor (코드 에디터)
 ```
 
 ### 3.2 백엔드
 ```typescript
 // 기술 스택
-- Node.js + TypeScript
-- NestJS
-- Supabase
+- Node.js + NestJS
+- Neo4j (그래프 데이터베이스)
+- PostgreSQL (관계형 데이터)
 - Redis (캐싱)
-- Bull (작업 큐)
-```
-
-### 3.3 인프라
-```typescript
-// 배포 환경
-- Docker
-- AWS
-- GitHub Actions
-- Vercel
+- Socket.io (실시간 통신)
 ```
 
 ## 4. 데이터 모델
 
-### 4.1 핵심 엔티티
+### 4.1 그래프 데이터 모델
 ```typescript
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  preferences: UserPreferences;
-  learningStats: LearningStats;
+interface GraphModel {
+  nodes: {
+    concepts: ConceptNode[];
+    implementations: ImplementationNode[];
+    examples: ExampleNode[];
+  };
+  edges: {
+    connections: Connection[];
+    references: Reference[];
+  };
+  metadata: {
+    version: string;
+    lastModified: Date;
+    stats: GraphStats;
+  };
 }
+```
 
-interface Roadmap {
-  id: string;
-  title: string;
-  description: string;
-  nodes: Node[];
-  edges: Edge[];
-  visibility: 'public' | 'private';
-  creator: User;
-}
-
-interface LearningNode {
-  id: string;
-  title: string;
-  content: Content;
-  status: 'not_started' | 'in_progress' | 'completed';
-  reviewSchedule: ReviewSchedule[];
-}
-
-interface ReviewSchedule {
-  id: string;
-  nodeId: string;
-  scheduledDate: Date;
-  reviewType: ReviewType;
-  completed: boolean;
+### 4.2 문서 데이터 모델
+```typescript
+interface DocumentModel {
+  notes: Note[];
+  blogs: BlogPost[];
+  templates: Template[];
+  attachments: Attachment[];
 }
 ```
 
 ## 5. UI/UX 상세 설계
 
-### 5.1 주요 화면 구성
-1. 홈 화면 
-   - 작성한 나의 개념 지도 | 작성하지 않았다면 추천 개념 지도
-   - 사이드바에 나의 개념지도 리스트 목록
+### 5.1 시냅스 맵 인터페이스
+1. 메인 캔버스
+   - 줌 인/아웃 컨트롤
+   - 노드 드래그 앤 드롭
+   - 연결선 생성/편집
+   - 미니맵 네비게이션
 
-2. 대시보드
-   - 학습 진행 현황
-   - 오늘의 복습 항목
-   - 추천 학습 경로
+2. 노드 상세 패널
+   - 노드 정보 표시/편집
+   - 연결된 노트/블로그 목록
+   - 이해도 업데이트
+   - 연결 관리
 
-3. 로드맵 에디터
-   - 드래그 앤 드롭 인터페이스
-   - 미니맵
-   - 도구 패널
+### 5.2 노트 에디터
+1. 분할 뷰
+   - 마크다운 에디터
+   - 실시간 프리뷰
+   - 시냅스 맵 미니뷰
+   - 연결된 노드 목록
 
-4. 학습 노트
-   - 템플릿 기반 에디터
-   - 실시간 저장
-   - 마크다운 지원
-
-5. 복습 센터
-   - 복습 일정 캘린더
-   - 퀴즈 인터페이스
-   - 카드 형태 인터페이스
-   - 성과 분석
+2. 도구 모음
+   - 서식 도구
+   - 코드 블록
+   - 파일 첨부
+   - 노드 링크
 
 ## 6. 개발 단계별 계획
 
 ### 6.1 Phase 1: MVP (1개월)
-- 기본 사용자 관리
-- 로드맵 생성/편집
-  - 빠른 1차 MVP 결과를 위해 프론트엔드 로드맵 우선으로 작성(개발)을 진행
-- 기본 학습 노트
-- 단순 복습 알림
+- 기본 시냅스 맵 생성/편집
+- 노드 및 연결 관리
+- 기본 노트 작성
+- 시각화 기초 기능
 
 ### 6.2 Phase 2: 고도화 (2개월)
-- 고급 로드맵 기능
-- AI 지원 기능
-- 스마트 복습 시스템
-- 소셜 기능
+- 고급 시각화 기능
+- 노트-맵 연동 강화
+- 블로그 시스템 통합
+- 실시간 협업 기능
 
 ### 6.3 Phase 3: 확장 (3개월)
+- AI 기반 연결 추천
+- 고급 분석 기능
 - API 개발
-- 기업용 기능
-- 고급 분석
-- 모바일 앱
+- 성능 최적화
 
-## 7. 성과 지표 (KPI)
-
-### 7.1 사용자 지표
-- DAU/MAU
-- 학습 완료율
-- 복습 실천율
-- 사용자 만족도
-
-### 7.2 학습 효과 지표
-- 개념 이해도 향상률
-- 장기 기억 유지율
-- 면접 합격률
-
-## 8. 향후 확장 계획
-
-### 8.1 기능 확장
-- AI 튜터링
-- 실시간 협업
-- VR 학습 환경
-
-### 8.2 비즈니스 확장
-- 기업 교육 플랫폼
-- 교육기관 연계
-- 글로벌 서비스
-
-## 9. 리스크 관리
-
-### 9.1 기술적 리스크
-- 데이터 백업 전략
-- 성능 최적화 계획
-- 보안 대책
-
-### 9.2 서비스 리스크
-- 사용자 이탈 방지책
-- 콘텐츠 품질 관리
-- 커뮤니티 가이드라인
-
-이 상세 기획서는 개념 지도 학습 서비스의 구체적인 구현 방향을 제시합니다. 각 섹션은 실제 개발 시 참고할 수 있는 상세한 스펙을 포함하고 있으며, 단계별 구현 계획을 통해 체계적인 개발이 가능하도록 구성되어 있습니다.
+이 상세 기획서는 시냅스 기반 지식 연결 플랫폼의 구체적인 구현 방향을 제시합니다. 각 섹션은 실제 개발에 필요한 상세 스펙을 포함하며, 단계별 구현 계획을 통해 체계적인 개발이 가능하도록 구성되어 있습니다.

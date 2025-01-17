@@ -12,374 +12,258 @@
        duration: "1-2분";
      };
      step2: {
-       action: "학습 목적 설정";
+       action: "학습 스타일 설정";
        options: [
-         '기술 면접 준비',
-         '개념 학습',
-         '실무 지식 향상'
+         '시각적 학습자',
+         '연결 중심 학습자',
+         '실습 중심 학습자'
        ];
      };
      step3: {
-       action: "학습 수준 진단";
-       assessment: {
-         duration: "5-7분",
-         questionTypes: ['객관식', '주관식', '개념연결'],
-         adaptiveDifficulty: true
+       action: "관심 분야 선택";
+       fields: {
+         mainField: string;    // 주 관심 분야
+         subFields: string[];  // 부 관심 분야
+         experience: number;   // 경험 수준 (1-5)
        };
      };
    }
    ```
 
-### B. 초기 설정
-1. **학습 환경 커스터마이징**
+### B. 시냅스 맵 튜토리얼
+1. **기본 사용법 안내**
    ```typescript
-   interface LearningPreferences {
-     dailyGoal: {
-       studyTime: number; // 분 단위
-       preferredTimeSlots: TimeRange[];
-       reminderSettings: NotificationPreference;
-     };
-     contentPreferences: {
-       preferredFormat: ['텍스트', '비디오', '인터랙티브'];
-       difficultyLevel: 1-5;
-       detailLevel: 'basic' | 'intermediate' | 'advanced';
-     };
+   interface TutorialFlow {
+     steps: [
+       {
+         step: "노드 생성";
+         action: "첫 개념 노드 생성하기";
+         guidance: "핵심 개념을 노드로 생성해보세요";
+       },
+       {
+         step: "연결 생성";
+         action: "노드 간 연결 만들기";
+         guidance: "관련 개념을 연결해보세요";
+       },
+       {
+         step: "노트 연결";
+         action: "노드에 상세 내용 추가";
+         guidance: "개념에 대한 설명을 작성해보세요";
+       }
+     ];
+     duration: "5-7분";
    }
    ```
 
-## 2. 학습 세션 시작 (Learning Session Initiation)
+## 2. 시냅스 맵 생성 및 확장 (Knowledge Building)
 
-### A. 주제 선택
-1. **개념 탐색**
+### A. 개념 노드 생성
+1. **노드 생성 프로세스**
    ```typescript
-   interface ConceptSelection {
-     searchOptions: {
-       keywords: string[];
-       filters: {
-         difficulty: number;
-         estimatedTime: number;
-         category: string[];
+   interface NodeCreationFlow {
+     steps: {
+       basic: {
+         title: string;
+         type: 'concept' | 'implementation' | 'example' | 'question';
+         summary: string;
+       };
+       details: {
+         tags: string[];
+         complexity: number;
+         importance: number;
+       };
+       connections: {
+         relatedNodes: string[];
+         connectionTypes: 'prerequisite' | 'related' | 'extends';
+         connectionStrength: number;
        };
      };
-     recommendations: {
-       based_on: 'level' | 'interests' | 'learning_path';
-       suggestions: ConceptNode[];
-     };
    }
    ```
 
-2. **학습 경로 확인**
+2. **연결 설정**
    ```typescript
-   interface LearningPathView {
-     mainConcept: {
-       title: "HTTP",
-       difficulty: 3,
-       estimatedTime: 45 // 분
+   interface ConnectionFlow {
+     selection: {
+       sourceNode: string;
+       targetNode: string;
+       type: ConnectionType;
      };
-     relatedConcepts: {
-       upstream: ["네트워크", "인터넷 프로토콜"],
-       downstream: ["HTTPS", "REST API"],
-       parallel: ["TCP/IP", "웹 서버"]
+     details: {
+       strength: number;
+       explanation: string;
+       bidirectional: boolean;
+     };
+     visualization: {
+       style: 'neural' | 'direct';
+       thickness: number;
+       animation: boolean;
      };
    }
    ```
 
-## 3. 실제 학습 과정 (Active Learning Process)
+### B. 지식 확장
+1. **관련 개념 탐색**
+   ```typescript
+   interface ExplorationFlow {
+     startPoint: string;  // 시작 노드
+     exploration: {
+       direction: 'upstream' | 'downstream' | 'related';
+       depth: number;     // 탐색 깊이
+       filter: {
+         nodeTypes: NodeType[];
+         minStrength: number;
+       };
+     };
+     discovery: {
+       suggestedNodes: Node[];
+       suggestedConnections: Connection[];
+     };
+   }
+   ```
 
-### A. 메인 학습
-1. **개념 소개**
+## 3. 학습 및 복습 (Learning Process)
+
+### A. 노드 학습
+1. **학습 세션**
    ```typescript
    interface LearningFlow {
-     introduction: {
-       duration: "3-5분";
-       elements: {
-         conceptOverview: string;
-         keyPoints: string[];
-         visualAid: Visualization;
-       };
+     node: {
+       current: Node;
+       relatedNotes: Note[];
+       connections: Connection[];
      };
-     mainContent: {
-       duration: "15-20분";
-       sections: {
-         theory: DetailedContent;
-         examples: PracticalExample[];
-         interactive: InteractiveElement[];
-       };
-     };
-     practice: {
-       duration: "10-15분";
-       exercises: {
-         basic: Exercise[];
-         intermediate: Exercise[];
-         advanced: Exercise[];
-       };
-     };
-   }
-   ```
-
-2. **진행 중 상호작용**
-   ```typescript
-   interface LearningInteraction {
-     checkpoints: {
-       frequency: "매 5-7분";
-       type: 'quiz' | 'recap' | 'connection';
-     };
-     userActions: {
-       noteCreation: boolean;
-       bookmarking: boolean;
-       questionAsking: boolean;
-     };
-     progressTracking: {
-       completionRate: number;
-       comprehensionScore: number;
-       attentionMetrics: number;
-     };
-   }
-   ```
-
-## 4. 복습 사이클 (Review Cycle)
-
-### A. 즉시 복습
-1. **학습 직후 확인**
-   ```typescript
-   interface ImmediateReview {
-     duration: "5-7분";
      activities: {
-       quickRecap: {
-         type: "키워드 작성";
-         format: "마인드맵";
+       reading: {
+         content: string;
+         estimatedTime: number;
        };
-       conceptCheck: {
-         type: "핵심 개념 확인";
-         format: "객관식";
+       practice: {
+         exercises: Exercise[];
+         examples: Example[];
        };
+       connection: {
+         review: Connection[];
+         strengthen: Connection[];
+       };
+     };
+     progress: {
+       comprehension: number;
+       timeSpent: number;
+       nextReview: Date;
      };
    }
    ```
 
-### B. 간격 복습
-1. **첫 번째 복습 (24시간 후)**
+### B. 연결 강화
+1. **복습 프로세스**
    ```typescript
-   interface FirstReview {
-     notification: {
-       timing: "학습 24시간 후";
-       type: "푸시 알림";
-       message: string;
+   interface ReviewFlow {
+     schedule: {
+       type: 'spaced' | 'connection-based';
+       timing: Date[];
+       priority: number;
      };
      session: {
-       duration: "10-15분";
-       components: {
-         warmup: "자유 회상" // 2-3분
-         keyPoints: "핵심 내용 복습" // 5분
-         connections: "개념 연결" // 5분
-         assessment: "이해도 체크" // 3분
-       };
+       nodes: Node[];
+       connections: Connection[];
+       activities: ReviewActivity[];
+     };
+     feedback: {
+       comprehension: number;
+       connectionStrength: number;
+       nextInterval: number;
      };
    }
    ```
 
-2. **후속 복습**
-   ```typescript
-   interface FollowUpReview {
-     schedule: {
-       day3: ReviewSession;  // 3일 후
-       day7: ReviewSession;  // 7일 후
-       day14: ReviewSession; // 14일 후
-       day30: ReviewSession; // 30일 후
-     };
-     adaptiveAdjustment: {
-       based_on: 'performance' | 'confidence';
-       modifications: {
-         interval: number;
-         difficulty: number;
-         content: string;
-       };
-     };
-   }
-   ```
+## 4. 콘텐츠 작성 (Content Creation)
 
-## 5. 블로그 작성 및 관리 (Blog Creation and Management)
+### A. 노트 작성
+```typescript
+interface NoteCreationFlow {
+  context: {
+    linkedNode: string;
+    noteType: 'detail' | 'example' | 'question';
+  };
+  content: {
+    markdown: string;
+    codeBlocks: CodeBlock[];
+    attachments: Attachment[];
+  };
+  connections: {
+    autoSuggest: boolean;
+    manualLinks: string[];
+  };
+}
+```
 
-### A. 블로그 작성
-1. **블로그 에디터 사용**
-   ```typescript
-   interface BlogEditor {
-     features: {
-       markdownSupport: boolean;
-       wysiwygSupport: boolean;
-       codeHighlighting: boolean;
-       mediaAttachment: boolean;
-       livePreview: boolean;
-     };
-   }
-   ```
+### B. 블로그 포스트 작성
+```typescript
+interface BlogCreationFlow {
+  preparation: {
+    synapseMapSnapshot: {
+      nodes: string[];
+      connections: string[];
+      focusNode: string;
+    };
+    template: 'explanation' | 'deep-dive' | 'connection-story';
+  };
+  writing: {
+    content: string;
+    embeddedMaps: SynapseMapEmbed[];
+    references: Reference[];
+  };
+  publishing: {
+    visibility: 'public' | 'private' | 'shared';
+    seo: SEOSettings;
+    sharing: SharingOptions;
+  };
+}
+```
 
-2. **게시물 관리**
-   ```typescript
-   interface BlogManagement {
-     actions: {
-       publish: boolean;
-       unpublish: boolean;
-       edit: boolean;
-       delete: boolean;
-       versionControl: boolean;
-     };
-   }
-   ```
-
-### B. 블로그와 로드맵 연동
-1. **로드맵 노드와 블로그 연결**
-   ```typescript
-   interface BlogRoadmapIntegration {
-     linkNodeToBlog: boolean;
-     displayRoadmapInBlog: boolean;
-   }
-   ```
-
-2. **블로그 내 로드맵 시각화**
-   ```typescript
-   interface BlogVisualization {
-     roadmapPreview: boolean;
-     highlightSpecificNodes: boolean;
-   }
-   ```
-
-## 6. 진행도 확인 및 피드백 (Progress Check & Feedback)
+## 5. 분석 및 개선 (Analysis & Improvement)
 
 ### A. 학습 분석
 ```typescript
-interface LearningAnalytics {
-  session: {
-    timeSpent: number;
-    conceptsCovered: string[];
-    exercisesCompleted: number;
-    accuracy: number;
+interface AnalyticsFlow {
+  metrics: {
+    nodeComprehension: Map<string, number>;
+    connectionStrength: Map<string, number>;
+    reviewEffectiveness: number;
   };
-  retention: {
-    immediateRecall: number;
-    dayOneRetention: number;
-    weekOneRetention: number;
+  insights: {
+    weakAreas: Node[];
+    suggestedReviews: Review[];
+    learningPatterns: Pattern[];
   };
   recommendations: {
-    nextSteps: string[];
-    focusAreas: string[];
-    supplementaryMaterial: Resource[];
+    nextNodes: Node[];
+    reviewSchedule: Schedule;
+    connectionSuggestions: Connection[];
   };
 }
 ```
 
-### B. 성과 리뷰
+### B. 지식 맵 최적화
 ```typescript
-interface PerformanceReview {
-  metrics: {
-    comprehensionScore: number;
-    retentionRate: number;
-    connectionStrength: number;
+interface OptimizationFlow {
+  analysis: {
+    connectionDensity: number;
+    clusterAnalysis: Cluster[];
+    pathEfficiency: number;
   };
-  feedback: {
-    strengths: string[];
-    improvements: string[];
-    suggestions: string[];
+  suggestions: {
+    nodeReorganization: Change[];
+    connectionAdjustments: Change[];
+    structuralImprovements: Improvement[];
   };
-  nextActions: {
-    recommendedConcepts: ConceptNode[];
-    reviewSchedule: ReviewSession[];
-    practiceExercises: Exercise[];
+  implementation: {
+    automaticChanges: Change[];
+    manualReview: Review[];
+    verificationSteps: Step[];
   };
 }
 ```
 
-## 7. 시각화된 유저 플로우 (Flow Visualization)
-
-### A. 전체 서비스 플로우
-```mermaid
-graph TD
-    A[서비스 진입] --> B[온보딩]
-    B --> C[학습 환경 설정]
-    C --> D[메인 대시보드]
-    
-    D --> E[로드맵 생성/선택]
-    D --> F[학습 노트 작성]
-    D --> G[복습 시스템]
-    D --> H[블로그 작성]
-    
-    E --> I[학습 세션]
-    F --> I
-    I --> G
-    I --> H
-    
-    G --> J[진도 분석]
-    H --> J
-```
-
-### B. 상세 온보딩 프로세스
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant S as System
-    
-    U->>S: 서비스 접속
-    S->>U: 회원가입/로그인 옵션 제시
-    U->>S: 인증 방식 선택
-    S->>U: 학습 목적 설문
-    U->>S: 목적 선택
-    S->>U: 학습 수준 진단 테스트
-    U->>S: 진단 테스트 완료
-    S->>U: 맞춤형 학습 환경 제공
-```
-
-### C. 학습 사이클
-```mermaid
-graph LR
-    A[개념 선택] --> B[학습 시작]
-    B --> C[개념 학습]
-    C --> D[즉시 복습]
-    D --> E[노트 작성]
-    E --> F[블로그 포스팅]
-    F --> G[간격 복습]
-    G --> H[이해도 평가]
-    H --> I[다음 개념]
-    I --> A
-```
-
-### D. 복습 시스템 플로우
-```mermaid
-stateDiagram-v2
-    [*] --> 학습완료
-    학습완료 --> 즉시복습: 학습 직후
-    즉시복습 --> 1차복습: 24시간 후
-    1차복습 --> 2차복습: 3일 후
-    2차복습 --> 3차복습: 7일 후
-    3차복습 --> 4차복습: 14일 후
-    4차복습 --> 5차복습: 30일 후
-    5차복습 --> [*]
-```
-
-### E. 블로그 작성 프로세스
-```mermaid
-graph TD
-    A[학습 노트 선택] --> B{블로그 변환}
-    B --> |자동 변환| C[기본 포스트 생성]
-    B --> |수동 작성| D[새 포스트 작성]
-    C --> E[내용 편집]
-    D --> E
-    E --> F[로드맵 연동]
-    F --> G[미리보기]
-    G --> H{게시 여부}
-    H --> |게시| I[발행]
-    H --> |임시저장| J[드래프트]
-    I --> K[SEO 최적화]
-    I --> L[소셜 공유]
-```
-
-### F. 데이터 수집 및 분석 플로우
-```mermaid
-graph LR
-    A[학습 활동] --> B[데이터 수집]
-    B --> C[패턴 분석]
-    C --> D[개인화된 추천]
-    D --> E[학습 최적화]
-    E --> A
-```
-
-이러한 시각화된 플로우는 서비스의 주요 기능들이 어떻게 상호 연결되어 있는지, 그리고 사용자가 어떤 경로로 서비스를 이용하게 되는지를 명확하게 보여줍니다.
+이 유저플로우는 시냅스 기반 지식 연결 플랫폼의 주요 사용자 경험을 정의합니다. 각 단계는 사용자가 자연스럽게 지식을 구조화하고 확장할 수 있도록 설계되었습니다.
