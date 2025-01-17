@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/', label: 'Home' },
-  { href: '/roadmaps', label: 'My Roadmaps' },
+  { href: '/roadmap', label: 'My Roadmaps' },
   { href: '/notes', label: 'Study Notes' },
   { href: '/review', label: 'Review Center' },
   { href: '/blog', label: 'Blog' },
@@ -20,6 +20,13 @@ const navItems = [
 export function MobileNav() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+
+  const getIsActive = (href: string) => {
+    if (href === '/') {
+      return pathname === href
+    }
+    return pathname.startsWith(href)
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -38,7 +45,7 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
               className={cn(
                 'text-sm font-medium transition-colors hover:text-primary px-2 py-1 rounded-md',
-                pathname === item.href
+                getIsActive(item.href)
                   ? 'bg-primary/10 text-primary'
                   : 'text-muted-foreground'
               )}

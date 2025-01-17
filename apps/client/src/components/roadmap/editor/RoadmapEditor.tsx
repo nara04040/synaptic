@@ -251,7 +251,7 @@ export function RoadmapEditor() {
   }, [nodes, edges])
 
   return (
-    <div className="h-[calc(100vh-12rem)] rounded-lg border bg-background w-full">
+    <div className="h-[calc(100vh-12rem)] rounded-lg border bg-background w-full min-w-full">
       <div className="flex h-full">
         <EditorSidebar />
         <div className="relative flex-1 w-full overflow-hidden">
