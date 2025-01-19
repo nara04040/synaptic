@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/', label: 'Home' },
-  { href: '/roadmap', label: 'Roadmaps' },
+  { href: '/synaptic-map', label: 'Synaptic Map' },
   { href: '/dashboard/prototype', label: 'Prototype' },
   { href: '/notes', label: 'Notes' },
   { href: '/review', label: 'Review Center' },

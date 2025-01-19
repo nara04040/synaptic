@@ -21,7 +21,7 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
             </div>
             <div className="hidden lg:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                {["Dashboard", "Roadmap", "Notes", "Review"].map((item) => (
+                {["Dashboard", "SynapticMap", "Notes", "Review"].map((item) => (
                   <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
                     {item}
                   </a>
@@ -85,7 +85,7 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
       {isMenuOpen && (
         <div className="lg:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {["Dashboard", "Roadmap", "Notes", "Review"].map((item) => (
+            {["Dashboard", "SynapticMap", "Notes", "Review"].map((item) => (
               <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
                 {item}
               </a>

@@ -47,13 +47,13 @@ const cytoscapeStylesheet: Stylesheet[] = [
       'opacity': 1,
       'z-index': 10,
       'transition-property': 'line-color target-arrow-color opacity width',
-      'transition-duration': 0.5
+      'transition-duration': 0.3
     }
   },
   {
     selector: '.upstream',
     style: {
-      'line-color': 'rgb(234 200 8)',
+      'line-color': 'rgb(234 179 8)',
       'target-arrow-color': 'rgb(234 179 8)',
       'width': 3,
       'line-style': 'dashed',
@@ -108,7 +108,7 @@ const cytoscapeStylesheet: Stylesheet[] = [
   }
 ]
 
-// 시냅스 데이터 정의
+// 시냅스 데이터 정의 (나중에 API로 대체)
 const elements = [
   // Nodes
   { 
@@ -351,12 +351,12 @@ function SynapticMap() {
   )
 }
 
-export default function PrototypePage() {
+export default function SynapticMapPage() {
   return (
     <div className="container mx-auto py-6">
       <Card className="bg-slate-900 border-slate-800">
         <CardHeader>
-          <CardTitle className="text-slate-300">Synaptic Map Prototype</CardTitle>
+          <CardTitle className="text-slate-300">Synaptic Map</CardTitle>
           <CardDescription className="text-slate-400">
             지식을 시냅스처럼 연결하여 더 깊은 이해를 만드는 상호작용형 학습 맵입니다.
             노드를 드래그하여 재배치하고, 노드 간 새로운 연결을 만들어보세요.
