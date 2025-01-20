@@ -40,30 +40,42 @@
 ### 2.2 Synapse Maps (/maps)
 - Maps Dashboard
   - My Maps
-    - Active Maps
-    - Archived Maps
-    - Shared Maps
-  - Create New
-    - Blank Canvas
-    - From Template
-    - Import
-- Map Editor
-  - Canvas
-    - Neural View
-    - Mind Map View
-    - Hierarchy View
-  - Node Tools
-    - Create Node
-    - Edit Node
-    - Connect Nodes
-  - Visualization Controls
-    - Zoom
-    - Layout
-    - Filters
+-    - Active Maps
+-    - Archived Maps
+-    - Shared Maps
+-  - Create New
+-    - Blank Canvas
+-    - From Template
+-    - Import
+
++ Maps Dashboard
++  - Knowledge Network
++    - Recent Notes
++    - Recent Blog Posts
++    - Connected Concepts
++  - Visualization Options
++    - Neural View
++    - Mind Map View
++    - Hierarchy View
+
++ Knowledge Viewer
++  - Interactive Canvas
++    - Auto-generated Nodes
++    - Dynamic Connections
++    - Context Preview
++  - Analysis Tools
++    - Concept Clustering
++    - Relationship Strength
++    - Learning Progress
+
   - Side Panel
-    - Node Details
-    - Connected Notes
-    - Related Content
+-    - Node Details
+-    - Connected Notes
+-    - Related Content
+
++    - Content Source
++    - Related Materials
++    - Connection Analysis
 
 ### 2.3 Notes (/notes)
 - Notes Dashboard
