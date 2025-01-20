@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import CytoscapeComponent from 'react-cytoscapejs'
 import { useEffect, useRef } from 'react'
-import cytoscape, { Core, NodeSingular, EdgeSingular, LayoutOptions, Stylesheet } from 'cytoscape'
+import cytoscape, { Core, NodeSingular, EdgeSingular, Stylesheet } from 'cytoscape'
 import coseBilkent from 'cytoscape-cose-bilkent'
 
 // COSE-Bilkent 레이아웃 등록

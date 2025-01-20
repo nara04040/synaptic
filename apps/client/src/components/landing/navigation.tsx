@@ -6,6 +6,14 @@ import { Bell, Search, User } from "lucide-react";
 import { ThemeToggle } from "@/components/landing/theme-toggle";
 import Link from "next/link";
 
+// 네비게이션 항목과 경로를 매핑
+const navigationItems = [
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "SynapticMap", href: "/synapticmap" },
+  { name: "Notes", href: "/notes" },
+  { name: "Review", href: "/review" }
+];
+
 export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -21,10 +29,14 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
             </div>
             <div className="hidden lg:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                {["Dashboard", "SynapticMap", "Notes", "Review"].map((item) => (
-                  <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium">
-                    {item}
-                  </a>
+                {navigationItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    {item.name}
+                  </Link>
                 ))}
               </div>
             </div>
@@ -85,10 +97,14 @@ export function Navigation({ isAuthenticated }: { isAuthenticated: boolean }) {
       {isMenuOpen && (
         <div className="lg:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {["Dashboard", "SynapticMap", "Notes", "Review"].map((item) => (
-              <a key={item} href={item.toLowerCase()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
-                {item}
-              </a>
+            {navigationItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
+              >
+                {item.name}
+              </Link>
             ))}
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">

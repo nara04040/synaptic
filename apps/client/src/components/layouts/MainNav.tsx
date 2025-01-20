@@ -17,14 +17,15 @@ export function MainNav() {
   const pathname = usePathname()
 
   const getIsActive = (href: string) => {
-    const pathSegments = pathname.split('/').filter(Boolean);
-    const hrefSegments = href.split('/').filter(Boolean);
-
     if (href === '/') {
       return pathname === href
     }
-
-    return pathSegments[0] === hrefSegments[0]
+    
+    // 현재 경로에서 동적 세그먼트를 제거하고 비교
+    const currentPath = pathname.split('/').slice(0, 2).join('/')
+    const navPath = href.split('/').slice(0, 2).join('/')
+    
+    return currentPath === navPath
   }
 
   return (

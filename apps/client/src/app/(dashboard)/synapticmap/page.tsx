@@ -41,7 +41,7 @@ export default function SynapticMapListPage() {
 
       <div className="grid gap-4">
         {synapticMaps.map((map) => (
-          <Link key={map.id} href={`/synaptic-map/${map.id}`}>
+          <Link key={map.id} href={`/synapticmap/${map.id}`}>
             <Card className="bg-slate-900 border-slate-800 hover:border-slate-700 transition-colors">
               <CardHeader>
                 <CardTitle className="text-slate-300">{map.title}</CardTitle>
