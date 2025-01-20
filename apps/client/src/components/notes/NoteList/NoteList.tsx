@@ -7,9 +7,12 @@ import { Plus } from 'lucide-react'
 import { NoteCard } from './NoteCard'
 import { NoteFilters } from './NoteFilters'
 import { NoteEditor } from '../NoteEditor/NoteEditor'
-import type { Note } from '../shared/NoteTypes'
+import type { Note, NoteData } from '../shared/NoteTypes'
 import { TagCloud } from '../shared/TagCloud'
 import type { TagCount } from '../shared/NoteTypes'
+import { useNodeStore } from '../../nodes/NodeStore'
+import { createNodeFromNote } from '../../nodes/NodeCreator'
+import { updateNodeConnections, syncNoteEdges } from '../../nodes/NodeLinker'
 
 export function NoteList() {
   const [notes, setNotes] = useState<Note[]>([])
@@ -17,6 +20,7 @@ export function NoteList() {
   const [isEditing, setIsEditing] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | undefined>()
   const [tags, setTags] = useState<TagCount[]>([])
+  const { addNode, updateNode, removeNode } = useNodeStore()
 
   const handleCreateNote = () => {
     setEditingNote(undefined)
@@ -28,21 +32,51 @@ export function NoteList() {
     setIsEditing(true)
   }
 
-  const handleSaveNote = (noteData: Omit<Note, 'id' | 'metadata'>) => {
+  const handleSaveNote = (noteData: NoteData) => {
+    // Debug log for incoming note data
+    console.log('Saving note with data:', noteData)
+    
     if (editingNote) {
       // 노트 수정
+      const updatedNote = {
+        ...editingNote,
+        ...noteData,
+        metadata: {
+          ...editingNote.metadata,
+          updated: new Date(),
+          references: noteData.metadata?.references ?? []
+        }
+      }
+      console.log('Updating existing note:', updatedNote)
       setNotes(notes.map(note => 
-        note.id === editingNote.id 
-          ? { 
-              ...note, 
-              ...noteData, 
-              metadata: { 
-                ...note.metadata, 
-                updated: new Date() 
-              } 
-            }
-          : note
+        note.id === editingNote.id ? updatedNote : note
       ))
+      
+      // 노드 업데이트
+      const nodeId = `node-${editingNote.id}`
+      console.log('Updating node:', nodeId)
+      updateNode(nodeId, {
+        type: noteData.type,
+        data: {
+          title: noteData.title,
+          content: noteData.content,
+          tags: noteData.tags,
+          noteId: editingNote.id,
+          references: noteData.metadata?.references ?? []
+        }
+      })
+
+      // Debug log for node store state
+      console.log('Current node store state:', useNodeStore.getState())
+
+      // 태그 기반 연결 업데이트
+      const node = useNodeStore.getState().nodes.find(n => n.id === nodeId)
+      if (node) {
+        updateNodeConnections(node)
+      }
+
+      // 참조 기반 연결 업데이트
+      syncNoteEdges(updatedNote)
     } else {
       // 새 노트 생성
       const newNote: Note = {
@@ -51,10 +85,28 @@ export function NoteList() {
         metadata: {
           created: new Date(),
           updated: new Date(),
-          references: []
+          references: noteData.metadata?.references ?? []
         }
       }
+      console.log('Creating new note:', newNote)
       setNotes([newNote, ...notes])
+      
+      // 새 노드 생성
+      const newNode = createNodeFromNote(newNote, {
+        x: Math.random() * 500,
+        y: Math.random() * 500
+      })
+      console.log('Creating new node:', newNode)
+      addNode(newNode)
+
+      // Debug log for node store state after creation
+      console.log('Node store state after creation:', useNodeStore.getState())
+
+      // 태그 기반 연결 생성
+      updateNodeConnections(newNode)
+
+      // 참조 기반 연결 생성
+      syncNoteEdges(newNote)
     }
     setIsEditing(false)
   }
@@ -66,6 +118,8 @@ export function NoteList() {
 
   const handleDeleteNote = (id: string) => {
     setNotes(notes.filter(note => note.id !== id))
+    // 노드 삭제
+    removeNode(`node-${id}`)
   }
 
   // 태그 통계 계산
@@ -98,6 +152,7 @@ export function NoteList() {
         note={editingNote}
         onSave={handleSaveNote}
         onCancel={handleCancelEdit}
+        availableNotes={notes}
       />
     )
   }

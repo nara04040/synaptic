@@ -11,6 +11,16 @@ export interface Note {
   };
 }
 
+export interface NoteData {
+  title: string;
+  content: string;
+  type: Note['type'];
+  tags: string[];
+  metadata?: {
+    references: string[];
+  };
+}
+
 export interface TagCount {
   name: string;
   count: number;
