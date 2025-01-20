@@ -9,4 +9,14 @@ export interface Note {
     updated: Date;
     references: string[];
   };
+}
+
+export interface TagCount {
+  name: string;
+  count: number;
+}
+
+export interface TagFilter {
+  type: string;
+  tag: string;
 } 

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { NoteTags } from '../shared/NoteTags'
 import type { Note } from '../shared/NoteTypes'
+import { MarkdownEditor } from './MarkdownEditor'
 
 interface NoteEditorProps {
   note?: Note
@@ -66,13 +67,10 @@ export function NoteEditor({ note, onSave, onCancel }: NoteEditorProps) {
 
           <div className="space-y-2">
             <Label htmlFor="content">Content</Label>
-            <Textarea
-              id="content"
+            <MarkdownEditor
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(value) => setContent(value || '')}
               placeholder="Write your note content..."
-              className="min-h-[200px]"
-              required
             />
           </div>
 
