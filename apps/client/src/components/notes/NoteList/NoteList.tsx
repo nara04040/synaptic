@@ -23,6 +23,8 @@ export function NoteList() {
   const { addNode, updateNode, removeNode } = useNodeStore()
 
   const handleCreateNote = () => {
+    console.log('=== Create Note Debug Info ===')
+    console.log('Current notes:', notes)
     setEditingNote(undefined)
     setIsEditing(true)
   }
@@ -33,8 +35,9 @@ export function NoteList() {
   }
 
   const handleSaveNote = (noteData: NoteData) => {
-    // Debug log for incoming note data
-    console.log('Saving note with data:', noteData)
+    console.log('=== Note Save Debug Info ===')
+    console.log('Incoming note data:', noteData)
+    console.log('Current notes:', notes)
     
     if (editingNote) {
       // 노트 수정
@@ -48,6 +51,8 @@ export function NoteList() {
         }
       }
       console.log('Updating existing note:', updatedNote)
+      console.log('References being saved:', updatedNote.metadata.references)
+      
       setNotes(notes.map(note => 
         note.id === editingNote.id ? updatedNote : note
       ))
@@ -67,7 +72,7 @@ export function NoteList() {
       })
 
       // Debug log for node store state
-      console.log('Current node store state:', useNodeStore.getState())
+      console.log('Node store state after update:', useNodeStore.getState())
 
       // 태그 기반 연결 업데이트
       const node = useNodeStore.getState().nodes.find(n => n.id === nodeId)
@@ -89,6 +94,8 @@ export function NoteList() {
         }
       }
       console.log('Creating new note:', newNote)
+      console.log('References for new note:', newNote.metadata.references)
+      
       setNotes([newNote, ...notes])
       
       // 새 노드 생성
@@ -147,6 +154,11 @@ export function NoteList() {
   })
 
   if (isEditing) {
+    console.log('=== NoteEditor Render Debug Info ===')
+    console.log('Editing Note:', editingNote)
+    console.log('Available Notes:', notes)
+    console.log('Filtered Available Notes:', notes.filter(n => n.id !== editingNote?.id))
+    
     return (
       <NoteEditor
         note={editingNote}
