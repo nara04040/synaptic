@@ -7,7 +7,7 @@ export default function CreateSynapticMapPage() {
       <PageHeader 
         heading="Create Synaptic Map"
         description="Create a new synaptic map to visualize and connect your knowledge"
-      />
+              />
       <SynapticMapForm />
     </div>
   )
