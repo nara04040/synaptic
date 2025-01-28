@@ -28,25 +28,34 @@ export function SynapticContextMenu({
   onAddEdge,
 }: SynapticContextMenuProps) {
   return (
-    <ContextMenu>
-      <ContextMenuTrigger />
-      <ContextMenuContent className="w-48">
-        <ContextMenuItem onClick={onEdit}>
-          Edit {type}
-        </ContextMenuItem>
-        {type === 'node' && (
-          <ContextMenuItem onClick={onAddEdge}>
-            Add connection
+    <div
+      className="fixed"
+      style={{
+        left: position.x,
+        top: position.y,
+        zIndex: 50
+      }}
+    >
+      <ContextMenu modal={false}>
+        <ContextMenuTrigger />
+        <ContextMenuContent className="w-48">
+          <ContextMenuItem onClick={onEdit}>
+            {type === 'node' ? '노드 편집' : '연결 편집'}
           </ContextMenuItem>
-        )}
-        <ContextMenuSeparator />
-        <ContextMenuItem
-          onClick={onDelete}
-          className="text-red-500 focus:text-red-500"
-        >
-          Delete {type}
-        </ContextMenuItem>
-      </ContextMenuContent>
-    </ContextMenu>
+          {type === 'node' && (
+            <ContextMenuItem onClick={onAddEdge}>
+              연결 추가
+            </ContextMenuItem>
+          )}
+          <ContextMenuSeparator />
+          <ContextMenuItem
+            onClick={onDelete}
+            className="text-red-500 focus:text-red-500"
+          >
+            {type === 'node' ? '노드 삭제' : '연결 삭제'}
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    </div>
   )
 } 

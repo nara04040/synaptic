@@ -110,6 +110,7 @@ interface DialogState {
   elementId: string
   sourceNode?: string
   targetNode?: string
+  connectedEdgesCount?: number
 }
 
 export function SynapticMap() {
@@ -171,8 +172,13 @@ export function SynapticMap() {
   // 컨텍스트 메뉴 핸들러
   const handleContextMenu = (evt: any) => {
     evt.preventDefault()
+    
     const element = evt.target
-    const position = evt.position || { x: 0, y: 0 }
+    // 실제 마우스 이벤트의 좌표 사용
+    const position = {
+      x: evt.originalEvent.clientX,
+      y: evt.originalEvent.clientY
+    }
 
     if (element === cyRef.current) {
       setContextMenu(null)
@@ -212,10 +218,22 @@ export function SynapticMap() {
   // 삭제 핸들러
   const handleDelete = () => {
     if (!contextMenu) return
+    
+    let connectedEdgesCount = 0
+    if (contextMenu.type === 'node') {
+      // 연결된 엣지 개수 계산
+      const cy = cyRef.current
+      if (cy) {
+        const node = cy.getElementById(contextMenu.elementId)
+        connectedEdgesCount = node.connectedEdges().length
+      }
+    }
+
     setDialog({
       type: contextMenu.type,
       mode: 'delete',
-      elementId: contextMenu.elementId
+      elementId: contextMenu.elementId,
+      connectedEdgesCount
     })
     setContextMenu(null)
   }
@@ -249,8 +267,9 @@ export function SynapticMap() {
     if (cy) {
       const element = cy.getElementById(dialog.elementId)
       element.data({
-        ...element.data(),
-        ...data
+        label: data.label,
+        type: data.type,
+        strength: data.strength,
       })
     }
 
@@ -306,6 +325,22 @@ export function SynapticMap() {
     setDialog(null)
   }
 
+  // 노드 삭제 핸들러
+  const handleNodeDelete = (nodeId: string) => {
+    const cy = cyRef.current
+    if (!cy) return
+
+    const node = cy.getElementById(nodeId)
+    const connectedEdgesCount = node.connectedEdges().length
+
+    setDialog({
+      type: 'node',
+      mode: 'delete',
+      elementId: nodeId,
+      connectedEdgesCount
+    })
+  }
+
   // 삭제 확인 핸들러
   const handleDeleteConfirm = () => {
     if (!dialog) return
@@ -313,11 +348,17 @@ export function SynapticMap() {
     if (!cy) return
 
     if (dialog.type === 'node') {
-      // store에서 노드 삭제
+      const node = cy.getElementById(dialog.elementId)
+      const connectedEdges = node.connectedEdges()
+      
+      // store에서 노드와 연결된 엣지들 삭제
       deleteNode(dialog.elementId)
+      connectedEdges.forEach(edge => {
+        deleteEdge(edge.id())
+      })
       
       // Cytoscape에서 노드 삭제 (연결된 엣지들도 자동으로 삭제됨)
-      cy.getElementById(dialog.elementId).remove()
+      node.remove()
     } else {
       // store에서 엣지 삭제
       deleteEdge(dialog.elementId)
@@ -477,7 +518,7 @@ export function SynapticMap() {
       })
 
       // 컨텍스트 메뉴 이벤트
-      cy.on('cxttap', handleContextMenu)
+      cy.on('cxttap', 'node, edge', handleContextMenu)
 
       // 줌 변경 이벤트
       cy.on('zoom', () => {
@@ -490,17 +531,50 @@ export function SynapticMap() {
         setPosition(position)
       })
 
-      // 더블클릭으로 노드 추가
-      cy.on('dblclick', (evt) => {
-        // 이벤트가 노드나 엣지에서 발생한 경우 무시
-        if (evt.target !== cy) return
+      // 노드 더블클릭 이벤트 (수정 또는 삭제)
+      cy.on('dblclick', 'node', (evt) => {
+        const node = evt.target
+        const nodeId = node.id()
+        const nodeData = TEST_DATA.nodes.find(n => n.data.id === nodeId)
+        if (!nodeData) return
 
-        // 마우스 위치를 Cytoscape 좌표계로 변환
-        const position = evt.position || { x: 0, y: 0 }
-        handleAddNode(position)
+        // Shift 키를 누른 상태로 더블클릭하면 삭제 다이얼로그 표시
+        if (evt.originalEvent.shiftKey) {
+          handleNodeDelete(nodeId)
+        } else {
+          // 일반 더블클릭은 수정 다이얼로그 표시
+          setDialog({
+            type: 'node',
+            mode: 'edit',
+            elementId: nodeId
+          })
+        }
+      })
+
+      // 빈 공간 더블클릭 이벤트 (노드 추가)
+      cy.on('dblclick', (evt) => {
+        if (evt.target === cy) {
+          const position = evt.position || { x: 0, y: 0 }
+          handleAddNode(position)
+        }
+      })
+
+      // 배경 클릭 시 컨텍스트 메뉴 닫기
+      document.addEventListener('click', (evt) => {
+        if (contextMenu) {
+          setContextMenu(null)
+        }
       })
     }
-  }, [selectNode, selectEdge, setZoom, setPosition, setSelectedNodes, setSelectedEdges, updateNodePosition])
+
+    return () => {
+      document.removeEventListener('click', () => {
+        if (contextMenu) {
+          setContextMenu(null)
+        }
+      })
+    }
+  }, [selectNode, selectEdge, setZoom, setPosition, setSelectedNodes, setSelectedEdges, updateNodePosition, contextMenu])
 
   return (
     <div className="relative w-full h-full">
@@ -537,6 +611,7 @@ export function SynapticMap() {
           isOpen={true}
           onClose={() => setDialog(null)}
           onSubmit={handleNodeUpdate}
+          onDelete={() => handleNodeDelete(dialog.elementId)}
           initialData={TEST_DATA.nodes.find(n => n.data.id === dialog.elementId)?.data as Partial<SynapticNode>}
         />
       )}
@@ -559,6 +634,7 @@ export function SynapticMap() {
           title={dialog.type === 'node' 
             ? TEST_DATA.nodes.find(n => n.data.id === dialog.elementId)?.data.label
             : undefined}
+          connectedEdgesCount={dialog.connectedEdgesCount}
         />
       )}
     </div>

@@ -58,6 +58,7 @@ interface NodeFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: NodeFormValues) => void
+  onDelete?: () => void
   initialData?: Partial<NodeFormValues>
 }
 
@@ -65,6 +66,7 @@ export function NodeForm({
   isOpen,
   onClose,
   onSubmit,
+  onDelete,
   initialData,
 }: NodeFormProps) {
   const form = useForm<NodeFormValues>({
@@ -176,13 +178,25 @@ export function NodeForm({
                 </FormItem>
               )}
             />
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={onClose}>
-                취소
-              </Button>
-              <Button type="submit">
-                {initialData ? "수정" : "생성"}
-              </Button>
+            <div className="flex justify-between space-x-2">
+              <div className="flex space-x-2">
+                <Button variant="outline" onClick={onClose}>
+                  취소
+                </Button>
+                <Button type="submit">
+                  {initialData ? "수정" : "생성"}
+                </Button>
+              </div>
+              {initialData && onDelete && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={onDelete}
+                  className="px-3"
+                >
+                  삭제
+                </Button>
+              )}
             </div>
           </form>
         </Form>
