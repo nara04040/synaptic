@@ -113,7 +113,11 @@ interface DialogState {
   connectedEdgesCount?: number
 }
 
-export function SynapticMap() {
+interface SynapticMapProps {
+  mapId: string;
+}
+
+export function SynapticMap({ mapId }: SynapticMapProps) {
   const cyRef = useRef<Core | null>(null)
   const dragStartPosition = useRef<{ x: number; y: number } | null>(null)
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)

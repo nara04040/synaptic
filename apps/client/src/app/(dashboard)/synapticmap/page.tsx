@@ -1,25 +1,62 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { SynapticMap } from "@/components/synaptic/core/SynapticMap"
+import { useState } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { MapGrid } from '@/components/synaptic/maps/MapGrid'
+import { CreateMapDialog } from '@/components/synaptic/maps/CreateMapDialog'
 
-export default function SynapticMapPage() {
+export default function SynapticMapsPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-6 space-y-6">
+      {/* Header Section */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-200">Synaptic Maps</h1>
+          <p className="text-slate-400">당신의 지식 네트워크를 시각화하고 관리하세요</p>
+        </div>
+        <Button 
+          onClick={() => setIsCreateDialogOpen(true)}
+          className="bg-primary hover:bg-primary/90"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          새 맵 만들기
+        </Button>
+      </div>
+
+      {/* Search and Filter Section */}
       <Card className="bg-slate-900 border-slate-800">
-        <CardHeader>
-          <CardTitle className="text-slate-300">Synaptic Map</CardTitle>
-          <CardDescription className="text-slate-400">
-            지식을 시냅스처럼 연결하여 더 깊은 이해를 만드는 상호작용형 학습 맵입니다.
-            노드를 클릭하여 연결된 개념들을 확인해보세요.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="w-full h-[900px] border border-slate-800 rounded-lg overflow-hidden">
-            <SynapticMap />
+        <CardContent className="p-4">
+          <div className="flex gap-4">
+            <Input
+              placeholder="맵 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="max-w-sm"
+            />
           </div>
         </CardContent>
       </Card>
+
+      {/* Maps Grid */}
+      <MapGrid searchQuery={searchQuery} />
+
+      {/* Create Map Dialog */}
+      <CreateMapDialog 
+        open={isCreateDialogOpen} 
+        onOpenChange={setIsCreateDialogOpen}
+      />
     </div>
   )
 } 
