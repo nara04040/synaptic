@@ -41,3 +41,7 @@ yarn-error.log*
 .vscode/
 *.code-workspace
 .cursorrules
+
+.specstory
+
+.yarn.lock
