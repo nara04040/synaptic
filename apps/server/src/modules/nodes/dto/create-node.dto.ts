@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsObject, ValidateNested, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, IsObject, ValidateNested, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class Position {
@@ -12,11 +12,11 @@ class Position {
 export class CreateNodeDto {
   @IsNotEmpty()
   @IsString()
-  @MaxLength(100)
   label: string;
 
   @IsNotEmpty()
   @IsString()
+  @IsIn(['text', 'image', 'link', 'file'])
   type: string;
 
   @IsNotEmpty()
@@ -27,6 +27,5 @@ export class CreateNodeDto {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(1000)
   content: string;
 } 

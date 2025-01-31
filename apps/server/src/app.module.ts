@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import { SupabaseModule } from './modules/supabase/supabase.module';
 import { MapsModule } from './modules/maps/maps.module';
 import { UsersModule } from './modules/users/users.module';
+import { NodesModule } from './modules/nodes/nodes.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { UsersModule } from './modules/users/users.module';
     }),
     SupabaseModule,
     MapsModule,
-    UsersModule
+    UsersModule,
+    NodesModule,
   ],
 })
 export class AppModule {}

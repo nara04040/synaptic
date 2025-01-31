@@ -4,10 +4,10 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-  private supabaseClient: SupabaseClient;
+  private adminClient: SupabaseClient;
 
   constructor(private configService: ConfigService) {
-    this.supabaseClient = createClient(
+    this.adminClient = createClient(
       this.configService.getOrThrow<string>('SUPABASE_URL'),
       this.configService.getOrThrow<string>('SUPABASE_SERVICE_ROLE_KEY'),
       {
@@ -19,7 +19,24 @@ export class SupabaseService {
     );
   }
 
-  getClient(): SupabaseClient {
-    return this.supabaseClient;
+  getClient(authToken?: string): SupabaseClient {
+    if (authToken) {
+      return createClient(
+        this.configService.getOrThrow<string>('SUPABASE_URL'),
+        this.configService.getOrThrow<string>('SUPABASE_KEY'),
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+          },
+          global: {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          },
+        },
+      );
+    }
+    return this.adminClient;
   }
 }
